@@ -1,0 +1,169 @@
+import {
+  Avatar,
+  Box,
+  Button,
+
+  Container,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import { Link } from "react-router";
+import { useRef, useState } from "react";
+
+const Rigesterpage = () => {
+  const nameref = useRef<HTMLInputElement>(null);
+  const emailref = useRef<HTMLInputElement>(null);
+  const passref = useRef<HTMLInputElement>(null);
+   const [error, seterorr] = useState("");
+  const register = async () => {
+   
+    const name = nameref.current?.value;
+    const email = emailref.current?.value;
+    const pass = passref.current?.value;
+    console.log(name, email, pass);
+    //call Api register
+    try {
+      const response = await fetch(`http://localhost:3000/user/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          pass,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        seterorr("Usr Aready exist");
+        return;
+      }
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <Container
+      maxWidth="sm"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        py: 4,
+      }}
+    >
+      <Paper
+        elevation={6}
+        sx={{
+          width: "100%",
+          p: 4,
+          borderRadius: 4,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            sx={{
+              bgcolor: "primary.main",
+              width: 60,
+              height: 60,
+              mb: 2,
+            }}
+          >
+            <PersonAddAlt1Icon />
+          </Avatar>
+
+          <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
+            Create Account
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            Join Flow Point and start shopping today.
+          </Typography>
+
+          <Box
+           
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
+            <TextField
+              label="Full Name"
+              fullWidth
+              required
+              name="name"
+              inputRef={nameref}
+            />
+            <TextField
+              label="Email"
+              type="email"
+              fullWidth
+              required
+              name="email"
+              inputRef={emailref}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              required
+              name="pass"
+              inputRef={passref}
+            />
+
+            <Button
+              onClick={register}
+              variant="contained"
+              size="large"
+              sx={{
+                mt: 2,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Register
+            </Button>
+            {error && <Typography  sx={{color:"red"}}>{error}</Typography> }
+          </Box>
+
+          <Typography variant="body2" sx={{ mt: 3 }}>
+            Already have an account?{" "}
+            <Typography
+              component={Link}
+              to="/register"
+              sx={{
+                textDecoration: "none",
+                color: "primary.main",
+                fontWeight: "bold",
+                display: "inline",
+              }}
+            >
+              Login
+            </Typography>
+          </Typography>
+        </Box>
+      </Paper>
+    </Container>
+  );
+};
+
+export default Rigesterpage;

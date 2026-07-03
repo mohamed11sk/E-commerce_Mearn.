@@ -25,6 +25,8 @@ const pages = [
 const NavBar = () => {
   const [open, setOpen] = useState(false);
 
+
+
   return (
     <>
       <AppBar position="sticky" elevation={2}>

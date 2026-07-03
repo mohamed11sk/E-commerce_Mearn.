@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-
   Container,
   Paper,
   TextField,
@@ -11,18 +10,22 @@ import {
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Link } from "react-router";
 import { useRef, useState } from "react";
+import { useAuth } from "../ontext/Auth/Authcontext";
 
 const Rigesterpage = () => {
   const nameref = useRef<HTMLInputElement>(null);
   const emailref = useRef<HTMLInputElement>(null);
   const passref = useRef<HTMLInputElement>(null);
-   const [error, seterorr] = useState("");
+
+  const [error, seterorr] = useState("");
+    const { login } = useAuth();
   const register = async () => {
-   
     const name = nameref.current?.value;
     const email = emailref.current?.value;
     const pass = passref.current?.value;
     console.log(name, email, pass);
+    //Call context Provider
+  
     //call Api register
     try {
       const response = await fetch(`http://localhost:3000/user/register`, {
@@ -37,14 +40,19 @@ const Rigesterpage = () => {
         }),
       });
 
-      const data = await response.json();
+      const token = await response.json();
+      if (!email || !email || !pass) {
+        return;
+      }
 
       if (!response.ok) {
         seterorr("Usr Aready exist");
         return;
       }
+     
+      login(email, token);
 
-      console.log(data);
+      console.log(token);
     } catch (error) {
       console.error(error);
     }
@@ -96,7 +104,6 @@ const Rigesterpage = () => {
           </Typography>
 
           <Box
-           
             sx={{
               width: "100%",
               display: "flex",
@@ -142,7 +149,7 @@ const Rigesterpage = () => {
             >
               Register
             </Button>
-            {error && <Typography  sx={{color:"red"}}>{error}</Typography> }
+            {error && <Typography sx={{ color: "red" }}>{error}</Typography>}
           </Box>
 
           <Typography variant="body2" sx={{ mt: 3 }}>

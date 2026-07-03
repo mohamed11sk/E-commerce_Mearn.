@@ -8,6 +8,7 @@ interface AuthcontextType {
     email :string |null,
     token:string | null,
     login: (email:string, token:string)=>void,
+    isAuthenticatio:boolean,
 }
-export const Authcontext = createContext<AuthcontextType > ({email:null  ,token:null , login:()=>{}  });
+export const Authcontext = createContext<AuthcontextType > ({email:null  ,token:null , login:()=>{} , isAuthenticatio:false});
 export const useAuth =()=> useContext(Authcontext);

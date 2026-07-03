@@ -13,51 +13,50 @@ import { useRef, useState } from "react";
 import { useAuth } from "../ontext/Auth/Authcontext";
 import { useNavigate } from "react-router";
 
-const Rigesterpage = () => {
-  const nameref = useRef<HTMLInputElement>(null);
+const LoginPage = () => {
   const emailref = useRef<HTMLInputElement>(null);
   const passref = useRef<HTMLInputElement>(null);
 
   const [error, seterorr] = useState("");
-  const navigate= useNavigate();
-    const { login } = useAuth();
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const register = async () => {
-    const name = nameref.current?.value;
+
     const email = emailref.current?.value;
     const pass = passref.current?.value;
-    console.log(name, email, pass);
+    console.log( email, pass);
     //Call context Provider
-  
+
     //call Api register
     try {
-      const response = await fetch(`http://localhost:3000/user/register`, {
+      const response = await fetch(`http://localhost:3000/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
           email,
           pass,
         }),
       });
 
       const token = await response.json();
-      if (!email || !email || !pass) {
+      if (!email || !pass) {
         return;
       }
 
       if (!response.ok) {
-        seterorr("Usr Aready exist");
+        seterorr("Incorect Email or Pass ");
         return;
       }
-     
+
       login(email, token);
-      navigate('/')
+      //  Navigatio to Home
+      navigate("/");
 
       console.log(token);
     } catch (error) {
-      console.error(error);
+      seterorr("erorr insert data");
     }
   };
 
@@ -99,7 +98,7 @@ const Rigesterpage = () => {
           </Avatar>
 
           <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
-            Create Account
+            Login
           </Typography>
 
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
@@ -114,13 +113,6 @@ const Rigesterpage = () => {
               gap: 2,
             }}
           >
-            <TextField
-              label="Full Name"
-              fullWidth
-              required
-              name="name"
-              inputRef={nameref}
-            />
             <TextField
               label="Email"
               type="email"
@@ -150,16 +142,16 @@ const Rigesterpage = () => {
                 fontWeight: "bold",
               }}
             >
-              Register
+              Login
             </Button>
             {error && <Typography sx={{ color: "red" }}>{error}</Typography>}
           </Box>
 
           <Typography variant="body2" sx={{ mt: 3 }}>
-            Already have an account?{" "}
+            Creat New Acount{" "}
             <Typography
               component={Link}
-              to="/login"
+              to="/register"
               sx={{
                 textDecoration: "none",
                 color: "primary.main",
@@ -167,7 +159,7 @@ const Rigesterpage = () => {
                 display: "inline",
               }}
             >
-              Login
+              Register
             </Typography>
           </Typography>
         </Box>
@@ -176,4 +168,4 @@ const Rigesterpage = () => {
   );
 };
 
-export default Rigesterpage;
+export default LoginPage;

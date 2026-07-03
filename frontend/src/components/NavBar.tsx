@@ -14,18 +14,13 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router";
-
-const pages = [
-  { name: "Home", path: "/" },
-  { name: "Products", path: "/products" },
-  { name: "About", path: "/about" },
-  { name: "Contact", path: "/contact" },
-];
+import { useAuth } from "../ontext/Auth/Authcontext";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
 
-
+  const { token, email, isAuthenticatio } = useAuth();
+  console.log("From nav ", { token });
 
   return (
     <>
@@ -56,18 +51,19 @@ const NavBar = () => {
               },
               gap: 2,
             }}
-          >
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                color="inherit"
-                component={Link}
-                to={page.path}
-              >
-                {page.name}
-              </Button>
-            ))}
-          </Box>
+          ></Box>
+          {isAuthenticatio ? (
+            <Typography>{email}</Typography>
+          ) : (
+            <Button
+              component={Link}
+              to="/login"
+              variant="contained"
+              color="info"
+            >
+              Login
+            </Button>
+          )}
 
           {/* Mobile Menu Button */}
           <IconButton
@@ -81,26 +77,8 @@ const NavBar = () => {
       </AppBar>
 
       {/* Mobile Drawer */}
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={() => setOpen(false)}
-      >
-        <Box sx={{ width: 250 }}>
-          <List>
-            {pages.map((page) => (
-              <ListItem key={page.name} disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to={page.path}
-                  onClick={() => setOpen(false)}
-                >
-                  <ListItemText primary={page.name} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+      <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+        <Box sx={{ width: 250 }}></Box>
       </Drawer>
     </>
   );

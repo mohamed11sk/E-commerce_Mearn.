@@ -6,6 +6,8 @@ import HomePage from "./pages/HomePage";
 import Rigesterpage from "./pages/Rigesterpage";
 import Authprovider from "./ontext/Auth/Authprovider";
 import LoginPage from "./pages/LoginPage";
+import CartPage from "./pages/CartPage";
+import ProtectedRout from "./components/ProtectedRout";
 
 
 function App() {
@@ -17,6 +19,9 @@ function App() {
         <Route path="/" element={<HomePage/>} />
         <Route path="/register" element={<Rigesterpage/>} />
         <Route path="/login" element={<LoginPage/>} />
+        <Route element={<ProtectedRout/>}>
+        <Route path="/cart" element={<CartPage/>} />
+        </Route>
       </Routes>
     </BrowserRouter>
     </Authprovider>

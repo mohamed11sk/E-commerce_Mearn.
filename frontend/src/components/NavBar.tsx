@@ -7,16 +7,17 @@ import {
   Box,
   IconButton,
   Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Grid,
+  Badge,
+  // List,
+  // ListItem,
+  // ListItemButton,
+  // ListItemText,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../ontext/Auth/Authcontext";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
@@ -29,6 +30,10 @@ const NavBar = () => {
   const HandelLogout = () => {
     logout();
     navigate("/");
+  };
+  const navigatToCart = () => {
+  
+    navigate("/cart");
   };
 
   return (
@@ -54,34 +59,87 @@ const NavBar = () => {
           {/* Desktop Menu */}
           <Box
             sx={{
-              display: {
-                xs: "none",
-                md: "flex",
-              },
-              gap: 4,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
             }}
-          ></Box>
-          {isAuthenticatio ? (
-            <Grid container spacing={2}   >
-              <Grid size="grow" sx={{display:"flex" ,alignItems :"center" , justifyContent :"center" ,gap:2  }}>
-                <Typography>{email}</Typography>
-                      <Button onClick={HandelLogout} variant="contained" color="info">
+          >
+            <IconButton onClick={navigatToCart} aria-label="cart"  sx={{color:"white"}}>
+              <Badge badgeContent={4} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+            {isAuthenticatio ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  bgcolor: "rgba(255,255,255,0.12)",
+                  px: 2,
+                  py: 0.8,
+                  borderRadius: "30px",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    display: {
+                      xs: "block",
+                      sm: "block",
+                    },
+                    fontSize: {
+                      xs: "11px",
+                      sm: "12px",
+                      md: "13px",
+                      lg: "15px",
+                    },
+                    maxWidth: {
+                      xs: 80,
+                      sm: 100,
+                      md: 140,
+                      lg: 180,
+                    },
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {email}
+                </Typography>
+
+                <Button
+                  onClick={HandelLogout}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  sx={{
+                    textTransform: "none",
+                    borderRadius: "20px",
+                    px: 2,
+                    fontWeight: 600,
+                  }}
+                >
                   Logout
                 </Button>
-              </Grid>
-
-              
-            </Grid>
-          ) : (
-            <Button
-              component={Link}
-              to="/login"
-              variant="contained"
-              color="info"
-            >
-              Login
-            </Button>
-          )}
+              </Box>
+            ) : (
+              <Button
+                component={Link}
+                to="/login"
+                variant="contained"
+                color="info"
+                sx={{
+                  textTransform: "none",
+                  borderRadius: "20px",
+                  px: 3,
+                  fontWeight: 600,
+                }}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
 
           {/* Mobile Menu Button */}
           <IconButton

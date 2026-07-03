@@ -11,16 +11,25 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Grid,
 } from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../ontext/Auth/Authcontext";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
 
-  const { token, email, isAuthenticatio } = useAuth();
+  const { token, email, isAuthenticatio, logout } = useAuth();
+
   console.log("From nav ", { token });
+  const navigate = useNavigate();
+
+  const HandelLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <>
@@ -49,11 +58,20 @@ const NavBar = () => {
                 xs: "none",
                 md: "flex",
               },
-              gap: 2,
+              gap: 4,
             }}
           ></Box>
           {isAuthenticatio ? (
-            <Typography>{email}</Typography>
+            <Grid container spacing={2}   >
+              <Grid size="grow" sx={{display:"flex" ,alignItems :"center" , justifyContent :"center" ,gap:2  }}>
+                <Typography>{email}</Typography>
+                      <Button onClick={HandelLogout} variant="contained" color="info">
+                  Logout
+                </Button>
+              </Grid>
+
+              
+            </Grid>
           ) : (
             <Button
               component={Link}

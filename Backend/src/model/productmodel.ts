@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IPRODUCT extends Document {
+  profuct_id:number;
   title: string;
   image: string;
   price: number;

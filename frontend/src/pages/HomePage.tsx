@@ -43,8 +43,9 @@ const HomePage = () => {
 
       <Grid container spacing={4}>
         {products.map((product) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <Grid key={product._id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <Products
+              _id={product._id}
               title={product.title}
               image={product.image}
               price={product.price}

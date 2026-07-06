@@ -8,16 +8,29 @@ import {
 } from "@mui/material";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCart } from "../ontext/Auth/cart/CartContext";
 export interface Product_DATA {
+  _id: number ;
   title: string;
   image: string;
   price: string;
   descrition: string;
 }
 
-const Products = ({ title, image, price, descrition }: Product_DATA) => {
+
+
+
+const Products = ({
+  _id,
+  title,
+  image,
+  price,
+  descrition,
+}: Product_DATA) => {
+  const{AddItem}= useCart()
   return (
     <Card
+  
       sx={{
         borderRadius: 3,
         boxShadow: 3,
@@ -71,12 +84,12 @@ const Products = ({ title, image, price, descrition }: Product_DATA) => {
             mt: 2,
           }}
         >
-          {price}
+          {price} EGY {_id}
         </Typography>
       </CardContent>
 
       <CardActions sx={{ p: 2 }}>
-        <Button variant="contained" fullWidth startIcon={<ShoppingCartIcon />}>
+        <Button  onClick={()=>AddItem(_id)} variant="contained" fullWidth startIcon={<ShoppingCartIcon />}>
           Add To Cart
         </Button>
       </CardActions>

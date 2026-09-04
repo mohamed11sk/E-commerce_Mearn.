@@ -10,7 +10,7 @@ import {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "../ontext/Auth/cart/CartContext";
 export interface Product_DATA {
-  _id: number ;
+  _id: string;
   title: string;
   image: string;
   price: string;
@@ -27,6 +27,7 @@ const Products = ({
   price,
   descrition,
 }: Product_DATA) => {
+  //call Add to cart providor
   const{AddItem}= useCart()
   return (
     <Card
@@ -84,7 +85,7 @@ const Products = ({
             mt: 2,
           }}
         >
-          {price} EGY {_id}
+          {price} EGY
         </Typography>
       </CardContent>
 

@@ -18,13 +18,15 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../ontext/Auth/Authcontext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCart } from "../ontext/Auth/cart/CartContext";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
 
   const { token, email, isAuthenticatio, logout } = useAuth();
+    const { CartItems } = useCart();
 
-  console.log("From nav ", { token });
+ 
   const navigate = useNavigate();
 
   const HandelLogout = () => {
@@ -35,6 +37,7 @@ const NavBar = () => {
   
     navigate("/cart");
   };
+  
 
   return (
     <>
@@ -65,7 +68,7 @@ const NavBar = () => {
             }}
           >
             <IconButton onClick={navigatToCart} aria-label="cart"  sx={{color:"white"}}>
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={CartItems.length} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>

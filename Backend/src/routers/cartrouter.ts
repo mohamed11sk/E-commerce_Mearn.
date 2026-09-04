@@ -15,7 +15,7 @@ const router = express.Router();
 router.get("/", validationJwt, async (req: ExtendRequest, res) => {
   try {
     const user_id = req.user._id;
-    const cart = await GetActiveCart({ Userid: user_id });
+    const cart = await GetActiveCart({ Userid: user_id ,populateproduct:true });
     res.status(200).send(cart);
   } catch (err) {
     res.status(500).send({ message: "Internal server error" });
@@ -36,7 +36,7 @@ router.delete("/", validationJwt, async (req: ExtendRequest, res) => {
 router.post("/item", validationJwt, async (req: ExtendRequest, res) => {
   try {
     const Userid = req.user._id;
-    const { productId, Quntity } = req.body;
+    const { productId, Quntity } = req.body; 
 
     const Add_item_to_cart = await AddItemCart({ productId, Quntity, Userid });
     res.status(Add_item_to_cart.status).send(Add_item_to_cart.data);

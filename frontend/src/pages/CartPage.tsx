@@ -1,30 +1,8 @@
-import { Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { BASE_URL_BACK } from "../consts/fileconst";
-import { useAuth } from "../ontext/Auth/Authcontext";
+import { Box, Container, Typography } from "@mui/material";
+import { useCart } from "../ontext/Auth/cart/CartContext";
 
 const CartPage = () => {
-  const [cart, SetCart] = useState();
-  const [err, set_err] = useState("");
-  const { token } = useAuth();
-
-  useEffect(() => {
-    const reyravcart = async () => {
-      try {
-        const res = await fetch(`${BASE_URL_BACK}/cart`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        SetCart(data);
-        console.log(data);
-      } catch (err) {
-        set_err("Erorr Fetch Cart");
-      }
-    };
-    reyravcart();
-  }, []);
+  const { CartItems } = useCart();
 
   return (
     <Container
@@ -34,7 +12,9 @@ const CartPage = () => {
         mx: "auto",
       }}
     >
-      <Typography> {}</Typography>
+  {CartItems.map((i)=>(
+   <Box key={i._id}>{i.title}</Box>
+   ))}
     </Container>
   );
 };

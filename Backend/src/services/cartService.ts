@@ -1,3 +1,4 @@
+import { populate } from "dotenv";
 import CartModel from "../model/cartmodel.js";
 import orderModel, { Product_order } from "../model/ordermodel.js";
 import ProductModel from "../model/productmodel.js";
@@ -13,9 +14,15 @@ export const createCart = async ({ Userid }: Creatcartforuser) => {
 };
 interface GetActiveCart {
   Userid: string;
+  populateproduct? :boolean;
 }
-export const GetActiveCart = async ({ Userid }: GetActiveCart) => {
-  let cart = await CartModel.findOne({ Userid, Activity: "Active" });
+export const GetActiveCart = async ({ Userid ,populateproduct }: GetActiveCart) => {
+  let cart ;
+  if(populateproduct){
+      cart = await CartModel.findOne({ Userid, Activity: "Active" }).populate('items.products');
+  }else{
+      cart = await CartModel.findOne({ Userid, Activity: "Active" });
+  }
   if (!cart) {
     cart = await createCart({ Userid });
   }
@@ -65,8 +72,8 @@ export const AddItemCart = async ({ productId, Quntity, Userid }: AddItem) => {
     Quntity: Number(Quntity),
     priceItem: product.price,
   });
-  const updateCart = await cart.save();
-  return { data: updateCart, status: 201 };
+   await cart.save();
+  return { data: await GetActiveCart({Userid,populateproduct:true}), status: 201 };
 };
 
 // put item in cart and update price
@@ -111,7 +118,7 @@ export const UpdateItemCart = async ({
     return { data: "No enght product in stock", status: 400 };
   }
   const updateCart = await cart.save();
-  return { data: updateCart, status: 201 };
+  return { data:  GetActiveCart({Userid,populateproduct:true}), status: 201 };
 };
 
 // Delete item from cart 
@@ -138,8 +145,8 @@ export const DeleteItemCart =  async({productId,Userid}:DeleteItemIncart)=>{
   },0)
   cart.items=antoherItem;
   cart.totalprince=total;
-    const deleteitemcart = await cart.save();
-  return { data: deleteitemcart, status: 201 };
+     await cart.save();
+  return { data:  GetActiveCart({Userid,populateproduct:true}), status: 201 };
 
 }
 //Checkout order 

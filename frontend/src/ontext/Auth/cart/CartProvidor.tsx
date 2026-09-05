@@ -12,9 +12,13 @@ const CartProvidor: FC<PropsWithChildren> = ({ children }) => {
     const [totalamount,Settotalamount]=useState<number>(0);
     const {token}=useAuth();
 
-      
-  useEffect(() => {
-    const reyravcart = async () => {
+  const loadCart = async () => {
+    if (!token) {
+      SetCartItems([]);
+      Settotalamount(0);
+      return;
+    }
+
       try {
         const res = await fetch(`${BASE_URL_BACK}/cart`, {
           headers: {
@@ -35,12 +39,13 @@ const CartProvidor: FC<PropsWithChildren> = ({ children }) => {
         }));
         SetCartItems(cartmapitem);
         Settotalamount(data.totalprince);
- 
       } catch (err) {
         console.error("Error fetching cart", err);
       }
-    };
-    reyravcart();
+  };
+
+  useEffect(() => {
+    loadCart();
   }, [token]);
   
 
@@ -61,27 +66,57 @@ const CartProvidor: FC<PropsWithChildren> = ({ children }) => {
       if(!response.ok){
         return;
       }
-      const cart = await response.json();
-      if(!cart){
-        return;
-      }
-      const cartmapitem = cart.items.map((item: {
-        products: { _id: string; title: string; image: string };
-        priceItem: number;
-        Quntity: number;
-      }) => ({
-        _id: item.products._id,
-        title: item.products.title,
-        image: item.products.image,
-        unite_price: String(item.priceItem),
-        Quantity: item.Quntity,
-      }));
-      SetCartItems(cartmapitem);
-      Settotalamount(cart.totalprince);
+      await loadCart();
     } catch (error) {
       console.error("Error adding item to cart", error);
     }
      
+    }
+    const updatedquantiy = async (product_id:string, quantity:number) => {
+      if (quantity < 1) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL_BACK}/cart/item`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product_id,
+            Quntity: quantity,
+          }),
+        });
+        if (!response.ok) {
+          return;
+        }
+        await loadCart();
+      } catch (err) {
+        console.error("Error updating cart quantity", err);
+      }
+    };
+    const deleteitemfromcart = async(product_id : string)=>{
+       try {
+        const response = await fetch(`${BASE_URL_BACK}/cart/item/${product_id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product_id,
+
+          }),
+        });
+        if (!response.ok) {
+          return;
+        }
+        await loadCart();
+      } catch (err) {
+        console.error("Error delete cart item", err);
+      }
+
     }
    
 
@@ -89,7 +124,7 @@ const CartProvidor: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ CartItems , totalamount ,AddItem }}
+      value={{ CartItems , totalamount ,AddItem,updatedquantiy ,deleteitemfromcart }}
     >
       {children}
     </CartContext.Provider>

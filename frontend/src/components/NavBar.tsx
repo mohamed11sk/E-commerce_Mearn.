@@ -23,8 +23,9 @@ import { useCart } from "../ontext/Auth/cart/CartContext";
 const NavBar = () => {
   const [open, setOpen] = useState(false);
 
-  const { token, email, isAuthenticatio, logout } = useAuth();
+  const {  email, isAuthenticatio, logout } = useAuth();
     const { CartItems } = useCart();
+    // const cartItemsCount = CartItems.reduce((total, item) => total + item.Quantity, 0);
 
  
   const navigate = useNavigate();

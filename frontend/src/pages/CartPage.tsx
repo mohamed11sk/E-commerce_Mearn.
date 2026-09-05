@@ -19,7 +19,14 @@ import { useCart } from "../ontext/Auth/cart/CartContext";
 import { Link } from "react-router";
 
 const CartPage = () => {
-  const { CartItems, totalamount } = useCart();
+  const { CartItems, totalamount, updatedquantiy ,deleteitemfromcart} = useCart();
+
+  const handelquantitiy = (productId: string, quantity: number) => {
+    void updatedquantiy(productId, quantity);
+  };
+  const handelDeleteItem = (productId: string) => {
+    void deleteitemfromcart(productId);
+  };
 
   if (CartItems.length === 0) {
     return (
@@ -110,11 +117,11 @@ const CartPage = () => {
                         {item.unite_price} EGY
                       </Typography>
                       <Stack direction="row" spacing={1} sx={{ mt: 1.5, alignItems: "center" }}>
-                        <IconButton size="small" aria-label="decrease quantity" sx={{ border: "1px solid #d8e2e0" }}>
+                        <IconButton onClick={() => handelquantitiy(item._id, item.Quantity - 1)} size="small" aria-label="decrease quantity" sx={{ border: "1px solid #d8e2e0" }}>
                           <RemoveIcon fontSize="small" />
                         </IconButton>
                         <Typography sx={{ minWidth: 22, textAlign: "center", fontWeight: 700 }}>{item.Quantity}</Typography>
-                        <IconButton size="small" aria-label="increase quantity" sx={{ border: "1px solid #d8e2e0" }}>
+                        <IconButton onClick={() => handelquantitiy(item._id, item.Quantity + 1)} size="small" aria-label="increase quantity" sx={{ border: "1px solid #d8e2e0" }}>
                           <AddIcon fontSize="small" />
                         </IconButton>
                       </Stack>
@@ -123,7 +130,7 @@ const CartPage = () => {
                       <Typography sx={{ color: "#183b45", fontWeight: 800, whiteSpace: "nowrap" }}>
                         {(Number(item.unite_price) * item.Quantity).toFixed(2)} EGY
                       </Typography>
-                      <IconButton aria-label="remove item" color="error" size="small">
+                      <IconButton onClick={()=>deleteitemfromcart(item._id)} aria-label="remove item" color="error" size="small">
                         <DeleteOutlinedIcon />
                       </IconButton>
                     </Stack>

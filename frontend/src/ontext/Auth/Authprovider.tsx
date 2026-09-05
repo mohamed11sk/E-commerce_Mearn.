@@ -15,7 +15,7 @@ const Authprovider: FC<PropsWithChildren> = ({ children }) => {
   const login = (email: string, token: string) => {
     setemail(email);
     settoken(token);
-    localStorage.setItem(EMAIL_VALUE, email);
+    // localStorage.setItem(EMAIL_VALUE, email);
     localStorage.setItem(TOKEN_VALUE, token);
   };
   const logout = () => {

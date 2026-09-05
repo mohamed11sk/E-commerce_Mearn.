@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -8,8 +9,10 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
+import { useRef, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -18,9 +21,17 @@ import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import { useCart } from "../ontext/Auth/cart/CartContext";
 import { Link } from "react-router";
+import { useAuth } from "../ontext/Auth/Authcontext";
+import { BASE_URL_BACK } from "../consts/fileconst";
+import { useNavigate } from "react-router";
 
 const CartPage = () => {
+  const setAddress = useRef<HTMLInputElement>(null);
   const { CartItems, totalamount, updatedquantiy, deleteitemfromcart, clearitem } = useCart();
+  const { token } = useAuth();
+  const navigate = useNavigate();
+  const [checkoutError, setCheckoutError] = useState("");
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handelquantitiy = (productId: string, quantity: number) => {
     void updatedquantiy(productId, quantity);
@@ -30,6 +41,38 @@ const CartPage = () => {
   };
   const handelclearitem = () => {
     void clearitem();
+  };
+  const processCheckout = async () => {
+    const address = setAddress.current?.value.trim() ?? "";
+    if (!address) {
+      setCheckoutError("Please enter your delivery address.");
+      return;
+    }
+
+    setCheckoutError("");
+    setIsCheckingOut(true);
+    try {
+      const response = await fetch(`${BASE_URL_BACK}/cart/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ adress: address }),
+      });
+
+      if (!response.ok) {
+        setCheckoutError((await response.text()) || "Checkout failed. Please try again.");
+        return;
+      }
+
+      navigate("/sucesspage");
+      void clearitem();
+    } catch {
+      setCheckoutError("Could not complete checkout. Please try again.");
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   if (CartItems.length === 0) {
@@ -161,6 +204,21 @@ const CartPage = () => {
             <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
               <Typography variant="h5" sx={{ fontWeight: 800, mb: 3 }}>Order total</Typography>
               <Stack spacing={2}>
+                <TextField
+                  inputRef={setAddress}
+                  label="Delivery address"
+                  placeholder="Street, building and city"
+                  multiline
+                  minRows={2}
+                  fullWidth
+                  error={Boolean(checkoutError)}
+                  sx={{
+                    "& .MuiInputLabel-root": { color: "#b9cfcc" },
+                    "& .MuiInputBase-root": { color: "white" },
+                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(255,255,255,0.35)" },
+                  }}
+                />
+                {checkoutError && <Alert severity="error">{checkoutError}</Alert>}
                 <Stack direction="row" sx={{ justifyContent: "space-between" }}>
                   <Typography sx={{ color: "#b9cfcc" }}>Subtotal</Typography>
                   <Typography sx={{ fontWeight: 700 }}>{Number(totalamount).toFixed(2)} EGY</Typography>
@@ -175,8 +233,8 @@ const CartPage = () => {
                   <Typography variant="h5" sx={{ color: "#8bd2c4", fontWeight: 850 }}>{Number(totalamount).toFixed(2)} EGY</Typography>
                 </Stack>
               </Stack>
-              <Button fullWidth variant="contained" sx={{ mt: 4, py: 1.5, borderRadius: 2, bgcolor: "#f5c451", color: "#183b45", textTransform: "none", fontWeight: 800, "&:hover": { bgcolor: "#eab63d" } }}>
-                Proceed to checkout
+              <Button onClick={processCheckout} disabled={isCheckingOut} fullWidth variant="contained" sx={{ mt: 4, py: 1.5, borderRadius: 2, bgcolor: "#f5c451", color: "#183b45", textTransform: "none", fontWeight: 800, "&:hover": { bgcolor: "#eab63d" } }}>
+                {isCheckingOut ? "Processing..." : "Proceed to checkout"}
               </Button>
             </CardContent>
           </Card>

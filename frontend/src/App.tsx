@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import CartPage from "./pages/CartPage";
 import ProtectedRout from "./components/ProtectedRout";
 import CartProvidor from "./ontext/Auth/cart/CartProvidor";
+import SuccessOrder from "./pages/SuccessOrder";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
 
           <Route element={<ProtectedRout />}>
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/sucesspage" element={<SuccessOrder />} />
+            <Route path="/success-order" element={<SuccessOrder />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -120,11 +120,28 @@ const CartProvidor: FC<PropsWithChildren> = ({ children }) => {
     }
    
 
+    const clearitem = async() => {
+       try {
+        const response = await fetch(`${BASE_URL_BACK}/cart`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          return;
+        }
+        await loadCart();
+      } catch (err) {
+        console.error("Error clearing cart", err);
+      }
+    }
+
   
 
   return (
     <CartContext.Provider
-      value={{ CartItems , totalamount ,AddItem,updatedquantiy ,deleteitemfromcart }}
+      value={{ CartItems , totalamount ,AddItem,updatedquantiy ,deleteitemfromcart ,clearitem }}
     >
       {children}
     </CartContext.Provider>

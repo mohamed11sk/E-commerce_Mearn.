@@ -15,17 +15,21 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import { useCart } from "../ontext/Auth/cart/CartContext";
 import { Link } from "react-router";
 
 const CartPage = () => {
-  const { CartItems, totalamount, updatedquantiy ,deleteitemfromcart} = useCart();
+  const { CartItems, totalamount, updatedquantiy, deleteitemfromcart, clearitem } = useCart();
 
   const handelquantitiy = (productId: string, quantity: number) => {
     void updatedquantiy(productId, quantity);
   };
-  const handelDeleteItem = (productId: string) => {
+  const handeldelteitem = (productId: string) => {
     void deleteitemfromcart(productId);
+  };
+  const handelclearitem = () => {
+    void clearitem();
   };
 
   if (CartItems.length === 0) {
@@ -87,9 +91,20 @@ const CartPage = () => {
         <Typography variant="h3" sx={{ color: "#183b45", fontWeight: 850, fontSize: { xs: "2rem", md: "3rem" } }}>
           Your cart
         </Typography>
-        <Typography sx={{ color: "#66757d", mt: 1 }}>
-          {CartItems.length} {CartItems.length === 1 ? "item" : "items"} ready for checkout
-        </Typography>
+        <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", gap: 2, flexWrap: "wrap" }}>
+          <Typography sx={{ color: "#66757d", mt: 1 }}>
+            {CartItems.length} {CartItems.length === 1 ? "item" : "items"} ready for checkout
+          </Typography>
+          <Button
+            onClick={handelclearitem}
+            startIcon={<DeleteSweepOutlinedIcon />}
+            color="error"
+            size="small"
+            sx={{ textTransform: "none", fontWeight: 700 }}
+          >
+            Clear cart
+          </Button>
+        </Stack>
       </Box>
 
       <Grid container spacing={4} sx={{ alignItems: "flex-start" }}>
@@ -130,7 +145,7 @@ const CartPage = () => {
                       <Typography sx={{ color: "#183b45", fontWeight: 800, whiteSpace: "nowrap" }}>
                         {(Number(item.unite_price) * item.Quantity).toFixed(2)} EGY
                       </Typography>
-                      <IconButton onClick={()=>deleteitemfromcart(item._id)} aria-label="remove item" color="error" size="small">
+                      <IconButton onClick={()=>handeldelteitem(item._id)} aria-label="remove item" color="error" size="small">
                         <DeleteOutlinedIcon />
                       </IconButton>
                     </Stack>

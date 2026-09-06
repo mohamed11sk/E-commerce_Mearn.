@@ -9,6 +9,9 @@ import CartPage from "./pages/CartPage";
 import ProtectedRout from "./components/ProtectedRout";
 import CartProvidor from "./ontext/Auth/cart/CartProvidor";
 import SuccessOrder from "./pages/SuccessOrder";
+import MyOrder from "./pages/MyOrder";
+
+
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/sucesspage" element={<SuccessOrder />} />
             <Route path="/success-order" element={<SuccessOrder />} />
+            <Route path="/myorder" element={<MyOrder />} />
           </Route>
         </Routes>
       </BrowserRouter>

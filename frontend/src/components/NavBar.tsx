@@ -18,16 +18,16 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../ontext/Auth/Authcontext";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { useCart } from "../ontext/Auth/cart/CartContext";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
 
-  const {  email, isAuthenticatio, logout } = useAuth();
-    const { CartItems } = useCart();
-    // const cartItemsCount = CartItems.reduce((total, item) => total + item.Quantity, 0);
+  const { email, isAuthenticatio, logout } = useAuth();
+  const { CartItems } = useCart();
+  // const cartItemsCount = CartItems.reduce((total, item) => total + item.Quantity, 0);
 
- 
   const navigate = useNavigate();
 
   const HandelLogout = () => {
@@ -35,10 +35,12 @@ const NavBar = () => {
     navigate("/");
   };
   const navigatToCart = () => {
-  
     navigate("/cart");
   };
-  
+
+  const navigateToMyOrders = () => {
+    navigate("/myorder");
+  };
 
   return (
     <>
@@ -68,11 +70,42 @@ const NavBar = () => {
               gap: 1,
             }}
           >
-            <IconButton onClick={navigatToCart} aria-label="cart"  sx={{color:"white"}}>
+            {isAuthenticatio && (
+              <Button
+                onClick={navigateToMyOrders}
+                startIcon={<ReceiptLongIcon />}
+                sx={{
+                  display: { xs: "none", sm: "flex" },
+                  color: "white",
+                  textTransform: "none",
+                  fontWeight: 600,
+                  borderRadius: "20px",
+                  px: 2,
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.12)",
+                  },
+                }}
+              >
+                My Orders
+              </Button>
+            )}
+
+            {isAuthenticatio && (
+              <IconButton
+                onClick={navigateToMyOrders}
+                aria-label="my orders"
+                sx={{ color: "white", display: { xs: "flex", sm: "none" } }}
+              >
+                <ReceiptLongIcon />
+              </IconButton>
+            )}
+
+            <IconButton onClick={navigatToCart} aria-label="cart" sx={{ color: "white" }}>
               <Badge badgeContent={CartItems.length} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
+
             {isAuthenticatio ? (
               <Box
                 sx={{

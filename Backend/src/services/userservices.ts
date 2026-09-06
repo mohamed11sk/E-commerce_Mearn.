@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import userModel from "../model/Usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import orderModel from "../model/ordermodel.js";
 
 export interface params {
   name: string;
@@ -40,6 +41,20 @@ export const login = async ({ email, pass }: patamslogin) => {
     statuscode: 200,
   };
 };
+interface getorderparam {
+  Userid:string;
+}
+
+export const getorder = async ({ Userid }: getorderparam) => {
+try{  
+
+    return { data: await orderModel.find({ Userid }), statuscode: 200 };}catch (err){
+  throw err;
+}
+  
+  
+};
+
 
 const generateJWT = (data: any) => {
   return jwt.sign(data, process.env.SCRET_KEY || "");
